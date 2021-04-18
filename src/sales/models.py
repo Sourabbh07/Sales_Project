@@ -3,6 +3,7 @@ from django.db import models
 
 from customers.models import Customer
 from profiles.models import Profile
+from products.models import Product
 
 from django.utils import timezone
 
@@ -18,7 +19,7 @@ class Position(models.Model):
         return super().save(*args,**kwargs)
 
     def __str__(self):
-        print f"id:{self.id} product:{self.product.name} quantity:{self.quantity}"
+        return f"id:{self.id} product:{self.product.name} quantity:{self.quantity}"
 class Sales(models.Model):
     transaction_id=models.CharField(max_length=12,blank=True)
     positions=models.ManyToManyField(Position)
@@ -43,4 +44,10 @@ class Sales(models.Model):
         return f"Sales for the amount of ${self.total_price}"
 
 class CSV(models.Model):
-    pass
+    filename=models.FileField(upload_to='csvs')
+    activated=models.BooleanField(default=True)
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.filename)
